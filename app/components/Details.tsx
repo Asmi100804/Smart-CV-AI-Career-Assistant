@@ -155,6 +155,42 @@ const Details = ({ feedback }: { feedback: Feedback }) => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+            <h3 className="font-semibold text-green-800">Strengths</h3>
+            <ul className="mt-2 list-disc pl-5 text-sm text-green-900">
+              {feedback.strengths.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+            <h3 className="font-semibold text-red-800">Weaknesses</h3>
+            <ul className="mt-2 list-disc pl-5 text-sm text-red-900">
+              {feedback.weaknesses.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <h3 className="font-semibold text-amber-800">Missing Keywords</h3>
+          <p className="mt-1 text-xs text-amber-700">Add these role-relevant keywords to improve ATS match.</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {feedback.missingKeywords.map((keyword) => (
+              <span key={keyword} className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">{keyword}</span>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <h3 className="font-semibold text-slate-900">Impact & Achievement Analysis</h3>
+          <ul className="mt-2 list-disc pl-5 text-sm text-slate-700">
+            {feedback.impactAnalysis.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <p className="mt-3 text-sm text-slate-600">Readability & Clarity Score: <span className="font-semibold text-slate-900">{feedback.readabilityClarityScore}/100</span></p>
+        </div>
       </div>
   );
 };

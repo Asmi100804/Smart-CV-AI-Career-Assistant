@@ -9,5 +9,6 @@ export default [
     route('/resume/:id','routes/resume.tsx'),
     route('/wipe','routes/wipe.tsx'),
     route('/api/generate-questions', 'routes/api.generate-questions.ts'),
-    route('/api/career-roadmap', 'routes/api.career-roadmap.ts')
+    route('/api/career-roadmap', 'routes/api.career-roadmap.ts'),
+    route('/api/resume-analysis', 'routes/api.resume-analysis.ts')
 ] satisfies RouteConfig;

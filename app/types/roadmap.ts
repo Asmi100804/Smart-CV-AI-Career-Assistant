@@ -8,13 +8,14 @@ export interface CareerRoadmap {
     why_needed: string;
     resources: string[];
     practice_projects: string[];
+    severity: "high" | "medium" | "low";
   }>;
   recommended_projects: string[];
   certifications: string[];
   timeline_plan: {
-    "1_3_months": string[];
-    "3_6_months": string[];
-    "6_plus_months": string[];
+    "30_days": string[];
+    "60_days": string[];
+    "90_days": string[];
   };
   overall_readiness_score: string;
 }

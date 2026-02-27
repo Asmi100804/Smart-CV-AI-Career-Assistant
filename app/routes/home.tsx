@@ -1,9 +1,9 @@
 import type { Route } from "./+types/home";
 import Navbar from "~/components/Navbar";
 import ResumeCard from "~/components/ResumeCard";
-import {usePuterStore} from "~/lib/puter";
-import {Link, useNavigate} from "react-router";
-import {useEffect, useState} from "react";
+import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { getStoredResumes } from "~/lib/resume-storage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,37 +13,14 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const { auth, kv } = usePuterStore();
-  const navigate = useNavigate();
   const [resumes, setResumes] = useState<Resume[]>([]);
-  const [loadingResumes, setLoadingResumes] = useState(false);
 
   useEffect(() => {
-    if(!auth.isAuthenticated) navigate('/auth?next=/');
-  }, [auth.isAuthenticated])
-
-  useEffect(() => {
-    const loadResumes = async () => {
-      setLoadingResumes(true);
-
-      const resumes = (await kv.list('resume:*', true)) as KVItem[];
-
-      const parsedResumes = resumes?.map((resume) => (
-          JSON.parse(resume.value) as Resume
-      ))
-
-      setResumes(parsedResumes || []);
-      setLoadingResumes(false);
-    }
-
-    loadResumes()
+    setResumes(getStoredResumes());
   }, []);
-
-  
 
   return <main className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
     <Navbar />
-    
 
     <section className="main-section">
       <div className="page-heading py-16">
@@ -92,20 +69,14 @@ export default function Home() {
       <div className="w-full max-w-6xl">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-semibold text-gray-800">Your Resume Reviews</h2>
-          {!loadingResumes && resumes.length > 0 && (
+          {resumes.length > 0 && (
             <Link to="/upload" className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:shadow-lg transition-all">
               Add New
             </Link>
           )}
         </div>
 
-        {loadingResumes && (
-          <div className="flex flex-col items-center justify-center">
-            <img src="/images/resume-scan-2.gif" className="w-[200px]" />
-          </div>
-        )}
-
-        {!loadingResumes && resumes.length > 0 && (
+        {resumes.length > 0 && (
           <div className="resumes-section">
             {resumes.map((resume) => (
               <ResumeCard key={resume.id} resume={resume} />
@@ -113,7 +84,7 @@ export default function Home() {
           </div>
         )}
 
-        {!loadingResumes && resumes?.length === 0 && (
+        {resumes.length === 0 && (
           <div className="bg-white rounded-2xl p-12 text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,5 +100,5 @@ export default function Home() {
         )}
       </div>
     </section>
-  </main>
+  </main>;
 }

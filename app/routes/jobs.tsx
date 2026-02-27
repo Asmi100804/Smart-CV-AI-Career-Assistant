@@ -1,7 +1,5 @@
-import { useState, type FormEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, type FormEvent } from 'react';
 import Navbar from '~/components/Navbar';
-import { usePuterStore } from '~/lib/puter';
 
 export const meta = () => [
   { title: 'SmartCV | Job Search' },
@@ -23,17 +21,9 @@ interface Job {
 }
 
 const Jobs = () => {
-  const { auth, isLoading } = usePuterStore();
-  const navigate = useNavigate();
   const [isSearching, setIsSearching] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!isLoading && !auth.isAuthenticated) {
-      navigate('/auth?next=/jobs');
-    }
-  }, [isLoading, auth.isAuthenticated]);
 
 
   const searchJobs = async ({

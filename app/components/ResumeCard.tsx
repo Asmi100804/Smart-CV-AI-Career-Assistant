@@ -1,10 +1,7 @@
-import React, { useState } from 'react'
 import { Link } from 'react-router'
 import ScoreCircle from './ScoreCircle'
 
-const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback,imagePath } }: { resume: Resume }) => {
-    const [resumeUrl, setResumeUrl] = useState('');
-
+const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imageDataUrl } }: { resume: Resume }) => {
 
     return (
         <Link to={`/resume/${id}`} className='resume-card animate-in fade-in duration-1000 '>
@@ -23,7 +20,7 @@ const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback,imagePath } 
             </div>
             <div className='gradient-border animate-in fade-in duration-1000'>
                 <div className='w-full h-full'>
-                    <img className="w-full h-[350px] max-sm:h-[200px] object-cover object-top" src={imagePath} alt="" />
+                    <img className="w-full h-[350px] max-sm:h-[200px] object-cover object-top" src={imageDataUrl} alt="" />
                 
             </div>
             </div>

@@ -44,7 +44,10 @@ const ImprovementRoadmapDashboard = ({ roadmap }: ImprovementRoadmapDashboardPro
         <div className="grid gap-4 lg:grid-cols-2">
           {roadmap.learning_roadmap.map((item) => (
             <article key={`${item.skill}-${item.why_needed}`} className="rounded-xl border border-slate-200 p-4">
-              <h5 className="font-semibold text-slate-900">{item.skill}</h5>
+              <div className="flex items-center justify-between gap-2">
+                <h5 className="font-semibold text-slate-900">{item.skill}</h5>
+                <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium uppercase text-slate-600">{item.severity}</span>
+              </div>
               <p className="mt-2 text-sm text-slate-600">{item.why_needed}</p>
               <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Resources</p>
               <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-700">
@@ -67,9 +70,9 @@ const ImprovementRoadmapDashboard = ({ roadmap }: ImprovementRoadmapDashboardPro
         <h4 className="mb-3 text-lg font-semibold text-slate-900">Timeline</h4>
         <div className="grid gap-4 md:grid-cols-3">
           {[
-            ["1-3 Months", roadmap.timeline_plan["1_3_months"]],
-            ["3-6 Months", roadmap.timeline_plan["3_6_months"]],
-            ["6+ Months", roadmap.timeline_plan["6_plus_months"]],
+            ["30 Days", roadmap.timeline_plan["30_days"]],
+            ["60 Days", roadmap.timeline_plan["60_days"]],
+            ["90 Days", roadmap.timeline_plan["90_days"]],
           ].map(([title, items]) => (
             <div key={String(title)} className="rounded-xl border border-slate-200 p-4">
               <h5 className="font-semibold text-slate-900">{title}</h5>

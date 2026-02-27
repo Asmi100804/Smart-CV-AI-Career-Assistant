@@ -1,17 +1,20 @@
-interface Job {
-  title: string;
-  description: string;
-  location: string;
-  requiredSkills: string[];
-}
-
 interface Resume {
   id: string;
   companyName?: string;
-  jobTitle?: string;
-  imagePath: string;
-  resumePath: string;
+  jobTitle: string;
+  jobDescription: string;
+  resumeDataUrl: string;
+  imageDataUrl: string;
   feedback: Feedback;
+  parsedResumeData: {
+    skills: string[];
+    experience: string[];
+    education: string[];
+    projects: string[];
+    certifications: string[];
+  };
+  extractedText?: string;
+  createdAt: string;
 }
 
 interface Feedback {
@@ -55,4 +58,9 @@ interface Feedback {
       explanation: string;
     }[];
   };
+  strengths: string[];
+  weaknesses: string[];
+  missingKeywords: string[];
+  impactAnalysis: string[];
+  readabilityClarityScore: number;
 }

@@ -7,10 +7,9 @@ export async function loader() {
   );
 }
 
-export async function action({ request }: any) {
+export async function action({ request }: { request: Request }) {
   try {
     const { parsedResumeData, targetRole } = await request.json();
-    console.log(parsedResumeData)
 
     if (!parsedResumeData || !targetRole) {
       return Response.json(
@@ -19,7 +18,7 @@ export async function action({ request }: any) {
       );
     }
 
-    const roadmap = await generateCareerRoadmap(parsedResumeData, targetRole);
+    const roadmap = await generateCareerRoadmap(parsedResumeData, String(targetRole));
     return Response.json(roadmap);
   } catch (error: any) {
     console.error("Career roadmap API error:", error);

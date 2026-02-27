@@ -1,7 +1,5 @@
-import { useState, type FormEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, type FormEvent } from 'react';
 import Navbar from '~/components/Navbar';
-import { usePuterStore } from '~/lib/puter';
 
 export const meta = () => [
   { title: 'SmartCV | Interview Questions' },
@@ -16,17 +14,9 @@ interface Question {
 }
 
 const Interview = () => {
-  const { auth, isLoading } = usePuterStore();
-  const navigate = useNavigate();
   const [isGenerating, setIsGenerating] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!isLoading && !auth.isAuthenticated) {
-      navigate('/auth?next=/interview');
-    }
-  }, [isLoading, auth.isAuthenticated]);
 
   const generateQuestions = async ({
     jobTitle,
