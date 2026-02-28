@@ -1,4 +1,5 @@
-import { extractTextFromPdf } from "~/services/parse-pdf.server";
+
+import { extractTextFromPdf } from "~/services/pdf-parse.server";
 import { generateResumeAnalysis } from "~/services/gemini.server";
 
 export async function loader() {

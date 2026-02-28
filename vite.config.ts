@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
   build: {
     rollupOptions: {
-      external: ["parse-pdf"],
+      external: ["pdf-parse"],
     },
   },
 });
