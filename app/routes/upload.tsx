@@ -8,6 +8,15 @@ import { generateUUID } from '~/lib/utils';
 import { saveResumeRecord } from '~/lib/resume-storage';
 import { requireUser } from "~/services/auth.server";
 
+export const meta = () => [
+  { title: 'SmartCV | Resume Intelligence Suite' },
+  {
+    name: 'description',
+    content:
+      'AI-powered deep resume analysis with ATS scoring, tone & readability insights, strengths & weaknesses, skill gap detection, and a personalized improvement roadmap with learning and certification suggestions.',
+  },
+];
+
 export async function loader({ request }: Route.LoaderArgs) {
   await requireUser(request);
   return null;
@@ -124,14 +133,16 @@ const Upload = () => {
       <Navbar />
       <section className="main-section">
         <div className='page-heading py-16'>
-          <h1>ATS Resume Review</h1>
+          <h1>Resume Intelligence Suite</h1>
           {isProcessing ? (
             <>
               <h2>{statusText}</h2>
               <img src="/images/resume-scan.gif" alt="Processing" className='w-full' />
             </>
           ) : (
-            <h2>Upload your resume for ATS score and improvement tips</h2>
+            <h2>
+              AI-powered deep resume analysis with ATS scoring, tone & readability insights, strengths & weaknesses, skill gap detection, and a personalized improvement roadmap with learning and certification suggestions.
+            </h2>
           )}
 
           {!isProcessing && (
