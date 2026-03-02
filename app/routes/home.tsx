@@ -7,7 +7,7 @@ import { getStoredResumes } from '~/lib/resume-storage';
 import { requireUser } from '~/services/auth.server';
 import ResumeCard from '~/components/ResumeCard';
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: 'SmartCV | Career Dashboard' },
     { name: 'description', content: 'AI-powered job search, resume intelligence, and interview Q&A preparation in one place.' },
@@ -38,7 +38,7 @@ export default function Home() {
     setResumes(getStoredResumes());
   }, []);
 
-  return <main className='bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen'>
+  return <main className='bg-linear-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen'>
     <Navbar />
 
     <section className='main-section'>
@@ -50,14 +50,42 @@ export default function Home() {
       <div className='w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12'>
         {FEATURE_DEFINITIONS.map((feature) => (
           <Link key={feature.key} to={feature.path} className='group'>
-            <div className='bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-xl transition-all hover:scale-105'>
-              <div className={`w-16 h-16 bg-gradient-to-br ${iconStylesByFeature[feature.key]} rounded-2xl flex items-center justify-center mb-4`}>
-                <svg className='w-8 h-8 text-white' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d={iconPathsByFeature[feature.key]} />
+            <div
+              className="
+    bg-white rounded-2xl p-8
+    shadow-sm border border-gray-100
+    hover:shadow-xl hover:scale-105
+    transition-all
+    flex flex-col
+    h-full min-h-80
+  "
+            >
+              <div
+                className={`w-16 h-16 bg-linear-to-br ${iconStylesByFeature[feature.key]}
+    rounded-2xl flex items-center justify-center mb-4 shrink-0`}
+              >
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={iconPathsByFeature[feature.key]}
+                  />
                 </svg>
               </div>
-              <h3 className='text-2xl font-semibold text-gray-800 mb-2'>{feature.title}</h3>
-              <p className='text-gray-600'>{feature.description}</p>
+
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+                {feature.title}
+              </h3>
+
+              <p className="text-gray-600 grow">
+                {feature.description}
+              </p>
             </div>
           </Link>
         ))}
@@ -67,7 +95,7 @@ export default function Home() {
         <div className='flex items-center justify-between mb-6'>
           <h2 className='text-3xl font-semibold text-gray-800'>Your Resume Reviews</h2>
           {resumes.length > 0 && (
-            <Link to='/resume-intelligence-suite' className='px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:shadow-lg transition-all'>
+            <Link to='/resume-intelligence-suite' className='px-6 py-2 bg-linear-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:shadow-lg transition-all'>
               Add New
             </Link>
           )}
@@ -90,7 +118,7 @@ export default function Home() {
             </div>
             <h3 className='text-2xl font-semibold text-gray-800 mb-2'>No resumes yet</h3>
             <p className='text-gray-600 mb-6'>Upload your first resume to get AI-powered feedback</p>
-            <Link to='/resume-intelligence-suite' className='inline-block px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:shadow-lg transition-all'>
+            <Link to='/resume-intelligence-suite' className='inline-block px-8 py-3 bg-linear-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:shadow-lg transition-all'>
               Upload Resume
             </Link>
           </div>

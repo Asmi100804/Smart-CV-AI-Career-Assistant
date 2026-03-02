@@ -50,19 +50,21 @@ const Navbar = () => {
 
       <div className='flex items-center gap-3'>
         {rootData?.userEmail && (
-          <div className='relative group'>
+          <div className='flex relative group gap-2'>
             <button
               type='button'
-              className='size-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold tracking-wide cursor-default'
+              className='w-13 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold tracking-wide cursor-default'
               aria-label='User account'
             >
               {getEmailInitials(rootData.userEmail)}
             </button>
 
-            <div className='absolute right-0 top-12 hidden group-hover:flex flex-col gap-3 min-w-[220px] bg-white border border-gray-200 rounded-2xl shadow-lg p-4 z-30'>
+            <div className='absolute right-0 top-12 hidden group-hover:flex flex-col gap-3 min-w-57 bg-white border border-gray-200 rounded-2xl shadow-lg p-4 z-30'>
               <p className='text-xs text-gray-500'>Signed in as</p>
               <p className='text-sm text-gray-800 break-all'>{rootData.userEmail}</p>
-              <Form method='post' action='/logout'>
+      
+            </div>
+            <Form method='post' action='/logout'>
                 <button
                   type='submit'
                   className='w-full px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all cursor-pointer text-sm'
@@ -70,7 +72,6 @@ const Navbar = () => {
                   Logout
                 </button>
               </Form>
-            </div>
           </div>
         )}
 
