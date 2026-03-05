@@ -1,5 +1,7 @@
+import type { Route } from "./+types/jobs";
 import { useState, type FormEvent } from 'react';
 import Navbar from '~/components/Navbar';
+import { requireUser } from "~/services/auth.server";
 
 export const meta = () => [
   { title: 'SmartCV | Job Search' },
@@ -18,6 +20,11 @@ interface Job {
   job_apply_link: string;
   job_description?: string;
   job_posted_at_datetime_utc?: string;
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser(request);
+  return null;
 }
 
 const Jobs = () => {

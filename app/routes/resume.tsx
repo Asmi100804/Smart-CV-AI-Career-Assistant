@@ -1,3 +1,4 @@
+import type { Route } from "./+types/resume";
 import { Link, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import Summary from "~/components/Summary";
@@ -8,11 +9,17 @@ import ImprovementRoadmapDashboard from "~/components/roadmap/ImprovementRoadmap
 import { requestCareerRoadmap } from "~/lib/career-roadmap-api";
 import type { CareerRoadmap } from "~/types/roadmap";
 import { getStoredResumeById } from "~/lib/resume-storage";
+import { requireUser } from "~/services/auth.server";
 
 export const meta = () => [
   { title: "Resumind | Review " },
   { name: "description", content: "Detailed overview of your resume" },
 ];
+
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser(request);
+  return null;
+}
 
 const Resume = () => {
   const { id = "" } = useParams();

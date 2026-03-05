@@ -1,3 +1,4 @@
+import { requireUser } from "~/services/auth.server";
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function loader() {
@@ -8,6 +9,7 @@ export async function loader() {
 }
 
 export async function action({ request }: any) {
+  await requireUser(request);
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
   if (!GEMINI_API_KEY) {

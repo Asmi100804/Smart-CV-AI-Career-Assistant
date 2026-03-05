@@ -1,3 +1,4 @@
+import { requireUser } from "~/services/auth.server";
 import { generateCareerRoadmap } from "~/services/gemini.server";
 
 export async function loader() {
@@ -8,6 +9,7 @@ export async function loader() {
 }
 
 export async function action({ request }: { request: Request }) {
+  await requireUser(request);
   try {
     const { parsedResumeData, targetRole } = await request.json();
 

@@ -112,8 +112,8 @@ Both new features use client-side API calls:
 
 ### State Management
 - React hooks for local state
-- Puter.js for authentication (unchanged)
-- No changes to existing Puter cloud storage
+- Email/password auth with server-managed sessions
+- Local resume storage in browser localStorage
 
 ---
 
@@ -189,10 +189,10 @@ All features are fully responsive:
 ## What Stayed the Same
 
 The following remain unchanged:
-- Puter.js authentication system
+- Cookie-based authentication system
 - Resume upload and PDF processing
-- AI feedback analysis (using Puter.ai)
-- Resume storage (Puter cloud storage)
+- AI feedback analysis (Gemini API)
+- Resume storage (browser localStorage)
 - All existing components (ATS, Summary, Details, ScoreGauge, etc.)
 - Resume history and review pages
 

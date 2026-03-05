@@ -1,5 +1,12 @@
+import type { Route } from "./+types/wipe";
 import { useState } from "react";
 import { wipeStoredResumes } from "~/lib/resume-storage";
+import { requireUser } from "~/services/auth.server";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser(request);
+  return null;
+}
 
 const WipeApp = () => {
   const [done, setDone] = useState(false);

@@ -1,9 +1,15 @@
+import type { Route } from "./+types/interview";
 import { useState, type FormEvent } from 'react';
 import Navbar from '~/components/Navbar';
+import { requireUser } from "~/services/auth.server";
 
 export const meta = () => [
-  { title: 'SmartCV | Interview Questions' },
-  { name: 'description', content: 'Generate interview questions for your job' },
+  { title: 'SmartCV | Interview Q&A Generator' },
+  {
+    name: 'description',
+    content:
+      'Generate tailored interview questions and expert-level answers based on your target job role and experience level.',
+  },
 ];
 
 interface Question {
@@ -11,6 +17,11 @@ interface Question {
   answer: string; 
   category: string;
   difficulty: string;
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser(request);
+  return null;
 }
 
 const Interview = () => {
@@ -107,8 +118,8 @@ const Interview = () => {
 
       <section className="main-section">
         <div className="page-heading py-16">
-          <h1>Interview Question Generator</h1>
-          <h2>Prepare for your next interview with AI-powered questions</h2>
+          <h1>Interview Q&amp;A Generator</h1>
+          <h2>Generate tailored interview questions and expert-level answers based on your target job role and experience level.</h2>
         </div>
 
         <div className="w-full max-w-4xl">

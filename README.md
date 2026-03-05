@@ -32,7 +32,7 @@ A comprehensive career platform featuring AI-powered resume analysis, interview 
 
 - ⚡️ React Router v7
 - 🎨 TailwindCSS v4
-- 🔐 Puter.js for authentication & storage
+- 🔐 Email/password authentication with secure cookie sessions
 - 🤖 Gemini API for interview questions
 - 💼 JSearch API for job listings
 - 🔒 TypeScript
@@ -50,6 +50,7 @@ Create a `.env` file (see `.env.example`):
 ```bash
 GEMINI_API_KEY=your_gemini_api_key_here
 VITE_JSEARCH_API_KEY=your_jsearch_api_key_here
+SESSION_SECRET=replace_with_a_long_random_string
 ```
 
 **For detailed setup instructions, see [API_SETUP.md](./API_SETUP.md)**
