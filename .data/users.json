@@ -4,6 +4,11 @@
       "email": "sumitbhatia900@gmail.com",
       "passwordHash": "ec16289fcecc9cb65d982d8f9cb21184:4717c25c1d6d75f4afa12c251c551ea9f9160610daf69932faec7368a9e83710516edae4e123659b86cec26c1b3a9c7858d98efc8b082770bb9c0904f3318633",
       "createdAt": "2026-02-28T07:22:05.628Z"
+    },
+    {
+      "email": "atrejasmi@gmail.com",
+      "passwordHash": "9865adc04697d3d5e2a00864ddfbb5fc:c2c87e70548ce0e41911a405082206be455a749f12062f2fdd36dad7473572717752bf29f016b8ded353b1e5abd1fb251c2874b7bda2355fbc6e5836c607b26a",
+      "createdAt": "2026-03-15T07:47:03.138Z"
     }
   ]
 }
