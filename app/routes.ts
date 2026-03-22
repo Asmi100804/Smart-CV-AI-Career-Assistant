@@ -6,6 +6,7 @@ export default [
   route('/logout', 'routes/logout.tsx'),
   route('/resume-intelligence-suite', 'routes/upload.tsx'),
   route('/interview-qa-generator', 'routes/interview.tsx'),
+  route('/mock-test', 'routes/mock-test.tsx'),
   route('/jobs', 'routes/jobs.tsx'),
   route('/upload', 'routes/legacy-upload.tsx'),
   route('/interview', 'routes/legacy-interview.tsx'),
