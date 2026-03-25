@@ -60,8 +60,15 @@ export default function Home() {
     transition-all
     flex flex-col
     h-full min-h-80
+    relative
   "
             >
+              {feature.key === 'mock-test' && (
+                <span className='absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-amber-100 text-amber-700'>
+                  New
+                </span>
+              )}
+
               <div
                 className={`w-16 h-16 bg-linear-to-br ${iconStylesByFeature[feature.key]}
     rounded-2xl flex items-center justify-center mb-4 shrink-0`}
