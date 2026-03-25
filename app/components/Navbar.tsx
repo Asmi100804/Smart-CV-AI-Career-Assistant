@@ -43,7 +43,14 @@ const Navbar = () => {
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            {feature.title}
+            <span className='inline-flex items-center gap-2'>
+              {feature.title}
+              {feature.key === 'mock-test' && (
+                <span className='text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-amber-100 text-amber-700'>
+                  New
+                </span>
+              )}
+            </span>
           </Link>
         ))}
       </div>
@@ -86,7 +93,7 @@ const Navbar = () => {
             <option value={DASHBOARD_ROUTE}>Dashboard</option>
             {FEATURE_DEFINITIONS.map((feature) => (
               <option key={feature.key} value={feature.path}>
-                {feature.title}
+                {feature.key === 'mock-test' ? `${feature.title} (New)` : feature.title}
               </option>
             ))}
           </select>

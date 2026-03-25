@@ -151,7 +151,7 @@ RULES:
         : [],
       difficulty: "hard" as const,
     }))
-    .filter((mcq) => mcq.question && mcq.options.length === 4);
+    .filter((mcq: MCQQuestion) => mcq.question && mcq.options.length === 4);
 
   const shortAnswers: ShortAnswerQuestion[] = (
     Array.isArray(parsed.shortAnswers) ? parsed.shortAnswers : []
@@ -163,7 +163,7 @@ RULES:
       question: String(sa.question ?? "").trim(),
       difficulty: "hard" as const,
     }))
-    .filter((sa) => sa.question);
+    .filter((sa: ShortAnswerQuestion) => sa.question);
 
   if (mcqs.length < mcqCount || shortAnswers.length < shortAnswerCount) {
     throw new Error("Failed to generate the requested number of questions.");

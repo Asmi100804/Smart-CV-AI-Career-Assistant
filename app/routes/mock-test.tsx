@@ -169,6 +169,19 @@ const MockTest = () => {
     return 'text-red-600';
   };
 
+  const answeredCount = testData
+    ? testData.questions.filter((question) => {
+        const answer = userAnswers[question.id];
+        return typeof answer === 'string' && answer.trim().length > 0;
+      }).length
+    : 0;
+
+  const totalQuestionCount = testData?.questions.length ?? 0;
+  const completionRate =
+    totalQuestionCount > 0
+      ? Math.round((answeredCount / totalQuestionCount) * 100)
+      : 0;
+
   return (
     <main className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
       <Navbar />
@@ -186,6 +199,21 @@ const MockTest = () => {
             <div className="gradient-border animate-in fade-in duration-500">
               <div className="bg-white rounded-2xl p-8">
                 <form onSubmit={handleGenerateTest} className="flex flex-col gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+                      <p className="text-xs text-blue-700 uppercase tracking-wide font-semibold">Difficulty</p>
+                      <p className="text-lg font-bold text-blue-900">Hard</p>
+                    </div>
+                    <div className="rounded-xl border border-purple-100 bg-purple-50 p-4">
+                      <p className="text-xs text-purple-700 uppercase tracking-wide font-semibold">Focus</p>
+                      <p className="text-lg font-bold text-purple-900">Role-specific</p>
+                    </div>
+                    <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                      <p className="text-xs text-emerald-700 uppercase tracking-wide font-semibold">Evaluation</p>
+                      <p className="text-lg font-bold text-emerald-900">Instant scoring</p>
+                    </div>
+                  </div>
+
                   <div className="form-div">
                     <label htmlFor="job-profile">Job Profile *</label>
                     <input
@@ -269,6 +297,19 @@ const MockTest = () => {
                     <span className="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
                       Hard
                     </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm text-gray-600">
+                    <p>Answered: {answeredCount}/{totalQuestionCount}</p>
+                    <p>{completionRate}% complete</p>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-2.5 rounded-full transition-all"
+                      style={{ width: `${completionRate}%` }}
+                    />
                   </div>
                 </div>
               </div>
@@ -355,6 +396,12 @@ const MockTest = () => {
                 >
                   Cancel
                 </button>
+              </div>
+
+              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                <p className="text-sm text-gray-600">
+                  Tip: unanswered questions are counted as incorrect. You can still submit any time and review correct answers in the breakdown.
+                </p>
               </div>
             </div>
           )}
