@@ -46,108 +46,169 @@
   - Index on created_at for sorting
 */
 
+-- =========================
+-- Enable required extension
+-- =========================
+create extension if not exists "pgcrypto";
+
+-- =========================
 -- Create mock_tests table
-CREATE TABLE IF NOT EXISTS mock_tests (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_email text NOT NULL,
-  job_profile text NOT NULL,
-  mcq_count integer NOT NULL DEFAULT 0,
-  short_answer_count integer NOT NULL DEFAULT 0,
-  questions jsonb NOT NULL DEFAULT '[]'::jsonb,
-  correct_answers jsonb NOT NULL DEFAULT '{}'::jsonb,
-  status text NOT NULL DEFAULT 'generated',
-  created_at timestamptz DEFAULT now(),
-  expires_at timestamptz DEFAULT (now() + interval '2 hours'),
-  CONSTRAINT valid_mcq_count CHECK (mcq_count >= 0 AND mcq_count <= 50),
-  CONSTRAINT valid_short_answer_count CHECK (short_answer_count >= 0 AND short_answer_count <= 50),
-  CONSTRAINT valid_status CHECK (status IN ('generated', 'submitted', 'expired'))
+-- =========================
+create table public.mock_tests (
+  id uuid primary key default gen_random_uuid(),
+
+  user_email text not null,
+  job_profile text not null,
+
+  mcq_count integer not null default 0,
+  short_answer_count integer not null default 0,
+
+  questions jsonb not null default '[]'::jsonb,
+  correct_answers jsonb not null default '{}'::jsonb,
+
+  status text not null default 'generated',
+
+  created_at timestamptz default now(),
+  expires_at timestamptz default (now() + interval '2 hours'),
+
+  constraint valid_mcq_count check (mcq_count >= 0 and mcq_count <= 50),
+  constraint valid_short_answer_count check (short_answer_count >= 0 and short_answer_count <= 50),
+  constraint valid_status check (status in ('generated', 'submitted', 'expired'))
 );
 
+-- =========================
 -- Create mock_test_submissions table
-CREATE TABLE IF NOT EXISTS mock_test_submissions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  test_id uuid NOT NULL REFERENCES mock_tests(id) ON DELETE CASCADE,
-  user_email text NOT NULL,
-  user_answers jsonb NOT NULL DEFAULT '{}'::jsonb,
-  score integer NOT NULL DEFAULT 0,
-  total_questions integer NOT NULL,
-  accuracy_percentage numeric(5,2) NOT NULL DEFAULT 0,
-  mcq_correct integer NOT NULL DEFAULT 0,
-  mcq_total integer NOT NULL DEFAULT 0,
-  short_answer_correct integer NOT NULL DEFAULT 0,
-  short_answer_total integer NOT NULL DEFAULT 0,
-  evaluation_details jsonb NOT NULL DEFAULT '[]'::jsonb,
-  submitted_at timestamptz DEFAULT now(),
-  CONSTRAINT valid_score CHECK (score >= 0 AND score <= total_questions),
-  CONSTRAINT valid_accuracy CHECK (accuracy_percentage >= 0 AND accuracy_percentage <= 100)
+-- =========================
+create table public.mock_test_submissions (
+  id uuid primary key default gen_random_uuid(),
+
+  test_id uuid not null references public.mock_tests(id) on delete cascade,
+
+  user_email text not null,
+
+  user_answers jsonb not null default '{}'::jsonb,
+
+  score integer not null default 0,
+  total_questions integer not null,
+
+  accuracy_percentage numeric(5,2) not null default 0,
+
+  mcq_correct integer not null default 0,
+  mcq_total integer not null default 0,
+
+  short_answer_correct integer not null default 0,
+  short_answer_total integer not null default 0,
+
+  evaluation_details jsonb not null default '[]'::jsonb,
+
+  submitted_at timestamptz default now(),
+
+  constraint valid_score check (score >= 0 and score <= total_questions),
+  constraint valid_accuracy check (accuracy_percentage >= 0 and accuracy_percentage <= 100)
 );
 
--- Create indexes for performance
-CREATE INDEX IF NOT EXISTS idx_mock_tests_user_email ON mock_tests(user_email);
-CREATE INDEX IF NOT EXISTS idx_mock_tests_created_at ON mock_tests(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_mock_test_submissions_test_id ON mock_test_submissions(test_id);
-CREATE INDEX IF NOT EXISTS idx_mock_test_submissions_user_email ON mock_test_submissions(user_email);
-CREATE INDEX IF NOT EXISTS idx_mock_test_submissions_submitted_at ON mock_test_submissions(submitted_at DESC);
+-- =========================
+-- Indexes
+-- =========================
+create index idx_mock_tests_user_email on public.mock_tests(user_email);
+create index idx_mock_tests_created_at on public.mock_tests(created_at desc);
 
--- Enable Row Level Security
-ALTER TABLE mock_tests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE mock_test_submissions ENABLE ROW LEVEL SECURITY;
+create index idx_mock_test_submissions_test_id on public.mock_test_submissions(test_id);
+create index idx_mock_test_submissions_user_email on public.mock_test_submissions(user_email);
+create index idx_mock_test_submissions_submitted_at on public.mock_test_submissions(submitted_at desc);
 
--- RLS Policies for mock_tests
+-- =========================
+-- Enable RLS
+-- =========================
+alter table public.mock_tests enable row level security;
+alter table public.mock_test_submissions enable row level security;
 
--- Users can view their own tests
-CREATE POLICY "Users can view own mock tests"
-  ON mock_tests FOR SELECT
-  TO authenticated
-  USING (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+-- =========================
+-- RLS Policies: mock_tests
+-- =========================
+create policy "Users can view own mock tests"
+on public.mock_tests
+for select
+to authenticated
+using (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- Users can create their own tests
-CREATE POLICY "Users can create own mock tests"
-  ON mock_tests FOR INSERT
-  TO authenticated
-  WITH CHECK (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+create policy "Users can create own mock tests"
+on public.mock_tests
+for insert
+to authenticated
+with check (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- Users can update their own tests
-CREATE POLICY "Users can update own mock tests"
-  ON mock_tests FOR UPDATE
-  TO authenticated
-  USING (user_email = current_setting('request.jwt.claims', true)::json->>'email')
-  WITH CHECK (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+create policy "Users can update own mock tests"
+on public.mock_tests
+for update
+to authenticated
+using (user_email = current_setting('request.jwt.claims', true)::json->>'email')
+with check (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- Users can delete their own tests
-CREATE POLICY "Users can delete own mock tests"
-  ON mock_tests FOR DELETE
-  TO authenticated
-  USING (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+create policy "Users can delete own mock tests"
+on public.mock_tests
+for delete
+to authenticated
+using (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- RLS Policies for mock_test_submissions
+-- =========================
+-- RLS Policies: submissions
+-- =========================
+create policy "Users can view own submissions"
+on public.mock_test_submissions
+for select
+to authenticated
+using (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- Users can view their own submissions
-CREATE POLICY "Users can view own submissions"
-  ON mock_test_submissions FOR SELECT
-  TO authenticated
-  USING (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+create policy "Users can create own submissions"
+on public.mock_test_submissions
+for insert
+to authenticated
+with check (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- Users can create their own submissions
-CREATE POLICY "Users can create own submissions"
-  ON mock_test_submissions FOR INSERT
-  TO authenticated
-  WITH CHECK (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+create policy "Users can update own submissions"
+on public.mock_test_submissions
+for update
+to authenticated
+using (user_email = current_setting('request.jwt.claims', true)::json->>'email')
+with check (user_email = current_setting('request.jwt.claims', true)::json->>'email');
 
--- Users can update their own submissions
-CREATE POLICY "Users can update own submissions"
-  ON mock_test_submissions FOR UPDATE
-  TO authenticated
-  USING (user_email = current_setting('request.jwt.claims', true)::json->>'email')
-  WITH CHECK (user_email = current_setting('request.jwt.claims', true)::json->>'email');
+-- =========================
+-- Utility function
+-- =========================
+create or replace function public.expire_old_mock_tests()
+returns void as $$
+begin
+  update public.mock_tests
+  set status = 'expired'
+  where status = 'generated'
+    and expires_at < now();
+end;
+$$ language plpgsql;
 
--- Function to automatically expire old tests
-CREATE OR REPLACE FUNCTION expire_old_mock_tests()
-RETURNS void AS $$
-BEGIN
-  UPDATE mock_tests
-  SET status = 'expired'
-  WHERE status = 'generated'
-    AND expires_at < now();
-END;
-$$ LANGUAGE plpgsql;
+-- =========================
+-- RPC function (IMPORTANT)
+-- =========================
+create or replace function public.exec_sql(query text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  result jsonb;
+begin
+  begin
+    execute format(
+      'select coalesce(jsonb_agg(t), ''[]''::jsonb) from (%s) t',
+      query
+    ) into result;
+    return coalesce(result, '[]'::jsonb);
+  exception when others then
+    execute query;
+    return '[]'::jsonb;
+  end;
+end;
+$$;
+
+grant execute on function public.exec_sql(text) to anon, authenticated, service_role;
