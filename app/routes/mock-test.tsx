@@ -2,6 +2,68 @@ import type { Route } from "./+types/mock-test";
 import { useState, type FormEvent } from 'react';
 import Navbar from '~/components/Navbar';
 import { requireUser } from "~/services/auth.server";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+const normalizeOptions = (options: string[]) => {
+  return options.map(opt =>
+    opt
+      .trim()
+      .replace(/^[A-D][.)]\s*/i, '') // ✅ remove "A.)", "B.", etc.
+      .replace(/\s+/g, ' ')
+      .replace(/,+$/, '')
+  );
+};
+
+// Render question with code support
+const RenderQuestion = ({ text }: { text: string }) => {
+  const codeRegex = /```(\w+)?\n([\s\S]*?)```/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = codeRegex.exec(text)) !== null) {
+    const [fullMatch, lang, code] = match;
+
+    // Push normal text before code
+    if (match.index > lastIndex) {
+      parts.push(
+        <p key={lastIndex} className="text-lg text-gray-800 mb-4 font-medium whitespace-pre-line">
+          {text.slice(lastIndex, match.index)}
+        </p>
+      );
+    }
+
+    // Push code block
+    parts.push(
+      <SyntaxHighlighter
+        key={match.index}
+        language={lang || 'javascript'}
+        style={oneDark}
+        customStyle={{
+          borderRadius: '12px',
+          padding: '16px',
+          fontSize: '14px'
+        }}
+      >
+        {code.trim()}
+      </SyntaxHighlighter>
+    );
+
+    lastIndex = match.index + fullMatch.length;
+  }
+
+  // Remaining text
+  if (lastIndex < text.length) {
+    parts.push(
+      <p key={lastIndex} className="text-lg text-gray-800 mb-4 font-medium whitespace-pre-line">
+        {text.slice(lastIndex)}
+      </p>
+    );
+  }
+
+  return <div>{parts}</div>;
+};
 
 export const meta = () => [
   { title: 'SmartCV | AI Mock Test' },
@@ -16,14 +78,14 @@ interface MCQQuestion {
   type: 'mcq';
   question: string;
   options: string[];
-  difficulty: 'hard';
+  difficulty: 'medium';
 }
 
 interface ShortAnswerQuestion {
   id: string;
   type: 'short_answer';
   question: string;
-  difficulty: 'hard';
+  difficulty: 'medium';
 }
 
 type Question = MCQQuestion | ShortAnswerQuestion;
@@ -170,7 +232,7 @@ const MockTest = () => {
   };
 
   return (
-    <main className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+    <main className="bg-linear-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
       <Navbar />
 
       <section className="main-section">
@@ -267,7 +329,7 @@ const MockTest = () => {
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Difficulty</p>
                     <span className="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                      Hard
+                      MEDIUM
                     </span>
                   </div>
                 </div>
@@ -283,18 +345,17 @@ const MockTest = () => {
                       {index + 1}
                     </div>
                     <div className="flex-1">
-                      <p className="text-lg text-gray-800 mb-4 font-medium">
-                        {question.question}
-                      </p>
+                      <RenderQuestion text={question.question} />
 
                       {question.type === 'mcq' && (
                         <div className="space-y-2">
-                          {question.options.map((option, optIndex) => {
+                          {normalizeOptions(question.options).map((option, optIndex) => {
                             const optionLabel = String.fromCharCode(65 + optIndex);
+
                             return (
                               <label
                                 key={optIndex}
-                                className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-blue-50 cursor-pointer transition-colors"
+                                className="flex items-start gap-2 cursor-pointer w-fit"
                               >
                                 <input
                                   type="radio"
@@ -303,10 +364,18 @@ const MockTest = () => {
                                   onChange={(e) =>
                                     handleAnswerChange(question.id, e.target.value)
                                   }
-                                  className="w-4 h-4"
+                                  className="w-4! h-4! shrink-0 accent-blue-600 cursor-pointer"
+                                  style={{
+                                    width: '16px',
+                                    height: '16px',
+                                    minWidth: '16px',
+                                    maxWidth: '16px'
+                                  }}
                                 />
-                                <span className="text-gray-700">
-                                  <span className="font-semibold">{optionLabel}.</span> {option}
+
+                                <span className="text-gray-700 leading-relaxed">
+                                  <span className="font-semibold mr-1">{optionLabel}.</span>
+                                  {option}
                                 </span>
                               </label>
                             );
@@ -416,11 +485,10 @@ const MockTest = () => {
                     return (
                       <div
                         key={detail.questionId}
-                        className={`p-4 rounded-lg border ${
-                          detail.isCorrect
-                            ? 'bg-green-50 border-green-200'
-                            : 'bg-red-50 border-red-200'
-                        }`}
+                        className={`p-4 rounded-lg border ${detail.isCorrect
+                          ? 'bg-green-50 border-green-200'
+                          : 'bg-red-50 border-red-200'
+                          }`}
                       >
                         <div className="flex items-start gap-3">
                           <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-semibold bg-white">

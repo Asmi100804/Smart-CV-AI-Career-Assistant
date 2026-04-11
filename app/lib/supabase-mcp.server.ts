@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
+console.log("SUPABASE_URL:", process.env.SUPABASE_URL);
+console.log("SUPABASE_KEY exists:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
 export async function mcp__supabase__execute_sql(query: string): Promise<void> {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

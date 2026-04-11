@@ -1,7 +1,7 @@
 import { requireUser } from "~/services/auth.server";
 import { generateMockTest } from "~/services/mock-test.server";
 import { mcp__supabase__execute_sql } from "~/lib/supabase-mcp.server";
-
+import 'dotenv/config';
 export async function loader() {
   return Response.json(
     { message: "This endpoint handles POST requests only." },
