@@ -25,8 +25,13 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const userEmail = await getUserEmail(request);
-  return { userEmail: userEmail ?? null };
+  try {
+    const userEmail = await getUserEmail(request);
+    return { userEmail: userEmail ?? null };
+  } catch (error) {
+    console.error("Failed to load session user", error);
+    return { userEmail: null };
+  }
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

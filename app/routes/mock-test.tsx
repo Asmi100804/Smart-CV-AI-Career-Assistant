@@ -2,8 +2,6 @@ import type { Route } from "./+types/mock-test";
 import { useState, type FormEvent } from 'react';
 import Navbar from '~/components/Navbar';
 import { requireUser } from "~/services/auth.server";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 const normalizeOptions = (options: string[]) => {
   return options.map(opt =>
@@ -36,18 +34,12 @@ const RenderQuestion = ({ text }: { text: string }) => {
 
     // Push code block
     parts.push(
-      <SyntaxHighlighter
+      <pre
         key={match.index}
-        language={lang || 'javascript'}
-        style={oneDark}
-        customStyle={{
-          borderRadius: '12px',
-          padding: '16px',
-          fontSize: '14px'
-        }}
+        className="mb-4 overflow-x-auto rounded-xl bg-[#282c34] p-4 text-sm text-gray-100"
       >
-        {code.trim()}
-      </SyntaxHighlighter>
+        <code data-language={lang || 'javascript'}>{code.trim()}</code>
+      </pre>
     );
 
     lastIndex = match.index + fullMatch.length;
