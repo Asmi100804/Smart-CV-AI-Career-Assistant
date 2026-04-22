@@ -35,3 +35,11 @@ All environment variables needed are listed in .env.example file
 - `npm run typecheck` – generate route types and run TypeScript checks
 
 
+
+## Deploying to Vercel
+1. Keep `react-router.config.ts` configured with `presets: [vercelPreset()]`.
+2. Ensure required environment variables from `.env.example` are set in Vercel Project Settings.
+   - Use a `SESSION_SECRET` that is at least 32 characters long in production.
+3. This repo includes `vercel.json` to force the React Router framework preset and build commands.
+
+If you see a Vercel `404: NOT_FOUND` page after deployment, verify the deployment is in **Ready** state and that the project is using the correct root directory and framework preset.

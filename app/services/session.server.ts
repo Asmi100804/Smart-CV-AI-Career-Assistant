@@ -1,10 +1,13 @@
 import { createCookieSessionStorage } from "react-router";
 
-const sessionSecret = process.env.SESSION_SECRET ?? "smartcv-dev-session-secret-change-me";
+const fallbackSessionSecret = "smartcv-dev-session-secret-change-me";
+const configuredSessionSecret = process.env.SESSION_SECRET?.trim();
 
-if (!sessionSecret) {
-  throw new Error("SESSION_SECRET must be set");
-}
+const sessionSecret = configuredSessionSecret
+  ? configuredSessionSecret.length >= 32
+    ? configuredSessionSecret
+    : configuredSessionSecret.padEnd(32, "_")
+  : fallbackSessionSecret;
 
 type SessionData = {
   userEmail?: string;
