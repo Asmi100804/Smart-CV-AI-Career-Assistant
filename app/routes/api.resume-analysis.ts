@@ -1,5 +1,5 @@
 import { extractTextFromPdf } from "~/services/pdf-parse.server";
-import { generateResumeAnalysis } from "~/services/gemini.server";
+import { generateResumeAnalysis } from "~/services/resume-ai.server";
 
 export async function loader() {
   return Response.json({ message: "This endpoint handles POST requests only." }, { status: 405 });

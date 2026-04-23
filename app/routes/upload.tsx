@@ -69,7 +69,7 @@ const Upload = () => {
 
       const imageDataUrl = await fileToDataUrl(previewImage.file);
 
-      setStatusText('Analyzing resume with Gemini...');
+      setStatusText('Analyzing resume with Groq...');
       const body = new FormData();
       body.append('resume', file);
       body.append('jobTitle', jobTitle);

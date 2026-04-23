@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { generateGroqJsonContent } from "~/services/groq.server";
 
 export interface CareerRoadmapResponse {
   skill_gap_analysis: {
@@ -58,8 +58,6 @@ export interface ResumeAnalysisResponse {
   };
 }
 
-const MODEL_NAME = "gemini-2.5-flash";
-
 const toStringList = (input: unknown): string[] =>
   Array.isArray(input) ? input.map((item) => String(item).trim()).filter(Boolean) : [];
 
@@ -82,21 +80,6 @@ const safeJsonParse = (rawText: string) => {
       return null;
     }
   }
-};
-
-const createModel = () => {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not configured.");
-  }
-
-  const genAI = new GoogleGenerativeAI(apiKey);
-  return genAI.getGenerativeModel({
-    model: MODEL_NAME,
-    generationConfig: {
-      responseMimeType: "application/json",
-    },
-  });
 };
 
 const normalizeCategory = (input: any) => ({
@@ -164,8 +147,6 @@ const normalizeRoadmapResponse = (data: any): CareerRoadmapResponse => ({
 });
 
 export async function generateResumeAnalysis(resumeText: string, jobTitle: string, jobDescription: string) {
-  const model = createModel();
-
   const prompt = `You are an expert ATS recruiter and resume coach. Analyze the resume for the given role.
 Return STRICT JSON and no markdown.
 
@@ -202,18 +183,17 @@ Rules:
 - Keep tips concise and actionable.
 `;
 
-  const result = await model.generateContent(prompt);
-  const parsed = safeJsonParse(result.response.text());
+  const rawText = await generateGroqJsonContent({ prompt });
+  const parsed = safeJsonParse(rawText);
 
   if (!parsed) {
-    throw new Error("Gemini returned non-JSON content for resume analysis.");
+    throw new Error("Groq returned non-JSON content for resume analysis.");
   }
 
   return normalizeAnalysis(parsed);
 }
 
 export async function generateCareerRoadmap(parsedResumeData: unknown, targetRole: string) {
-  const model = createModel();
   const prompt = `You are an expert AI career mentor.
 Create a detailed improvement roadmap for ${targetRole}.
 
@@ -235,11 +215,11 @@ Rules:
 - Include certifications aligned with ${targetRole}.
 `;
 
-  const result = await model.generateContent(prompt);
-  const parsed = safeJsonParse(result.response.text());
+  const rawText = await generateGroqJsonContent({ prompt });
+  const parsed = safeJsonParse(rawText);
 
   if (!parsed) {
-    throw new Error("Gemini returned non-JSON content.");
+    throw new Error("Groq returned non-JSON content.");
   }
 
   return normalizeRoadmapResponse(parsed);

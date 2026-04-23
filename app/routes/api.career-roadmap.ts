@@ -1,5 +1,5 @@
 import { requireUser } from "~/services/auth.server";
-import { generateCareerRoadmap } from "~/services/gemini.server";
+import { generateCareerRoadmap } from "~/services/resume-ai.server";
 
 export async function loader() {
   return Response.json(

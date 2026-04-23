@@ -1,159 +1,47 @@
-# SmartCV - Your AI-Powered Career Assistant
+# SmartCV AI Career Assistant
 
-A comprehensive career platform featuring AI-powered resume analysis, interview preparation, and job search capabilities.
+SmartCV is a React Router + TypeScript app that helps users improve resumes, prepare for interviews, and discover jobs with AI-assisted workflows.
 
-## Features
+## What it does
+- **ATS Resume Review**: Upload a resume PDF and get structured feedback.
+- **Interview Prep**: Generate role-specific interview questions.
+- **Job Search**: Search jobs by title/location and open application links.
+- **Career Roadmap**: Generate skill and learning plans.
 
-### 🎯 ATS Resume Review
-- Upload PDF resumes for instant analysis
-- AI-powered ATS compatibility scoring
-- Detailed feedback on tone, content, structure, and skills
-- Resume history and tracking
+## Tech stack
+- React Router v7
+- TypeScript
+- Tailwind CSS v4
+- Groq API (question generation)
+- JSearch API (jobs)
 
-### 💼 Interview Question Generator (NEW!)
-- Generate custom interview questions using OpenAI
-- Tailored to job title, experience level, and description
-- Questions categorized by type and difficulty
-- Regenerate for fresh questions anytime
+## Quick start
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Create `.env`:
+All environment variables needed are listed in .env.example file
 
-### 🔍 Job Search Module (NEW!)
-- Real-time job listings via JSearch API
-- Search by job title and location
-- Direct application links
-- Company logos and job details
+4. Run in development:
+   ```bash
+   npm run dev
+   ```
 
-### 🎨 Modern Design
-- Soft pastel color palette
-- Responsive layout for all devices
-- Tab-based navigation
-- Smooth animations and transitions
+## Scripts
+- `npm run dev` – start local dev server
+- `npm run build` – production build
+- `npm run start` – run built server
+- `npm run typecheck` – generate route types and run TypeScript checks
 
-## Tech Stack
 
-- ⚡️ React Router v7
-- 🎨 TailwindCSS v4
-- 🔐 Email/password authentication with secure cookie sessions
-- 🤖 Gemini API for interview questions
-- 💼 JSearch API for job listings
-- 🔒 TypeScript
-- 📦 Vite
 
-## Quick Start
+## Deploying to Vercel
+1. Keep `react-router.config.ts` configured with `presets: [vercelPreset()]`.
+2. Ensure required environment variables from `.env.example` are set in Vercel Project Settings.
+   - Use a `SESSION_SECRET` that is at least 32 characters long in production.
+3. This repo includes `vercel.json` to force the React Router framework preset and build commands.
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+If you see a Vercel `404: NOT_FOUND` page after deployment, verify the deployment is in **Ready** state and that the project is using the correct root directory and framework preset.
 
-### 2. Configure API Keys
-Create a `.env` file (see `.env.example`):
-```bash
-GEMINI_API_KEY=your_gemini_api_key_here
-VITE_JSEARCH_API_KEY=your_jsearch_api_key_here
-SESSION_SECRET=replace_with_a_long_random_string
-```
-
-**For detailed setup instructions, see [API_SETUP.md](./API_SETUP.md)**
-
-### 3. Start Development Server
-```bash
-npm run dev
-```
-
-Visit `http://localhost:5173`
-
-## Documentation
-
-- **[QUICKSTART.md](./QUICKSTART.md)** - Get up and running in 5 minutes
-- **[API_SETUP.md](./API_SETUP.md)** - Detailed API key configuration
-- **[FEATURES.md](./FEATURES.md)** - Complete feature documentation
-
-## API Keys Required
-
-### Gemini API (Interview Questions)
-- Sign up at: https://aistudio.google.com/
-- Get API key: https://aistudio.google.com/app/apikey
-- Cost: ~$0.002 per generation
-
-### JSearch API (Job Search)
-- Sign up at: https://rapidapi.com
-- Subscribe to: https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch
-- Free tier: 2,500 requests/month
-
-## Features Overview
-
-### Navigation
-The app has three main sections accessible from the navbar:
-- **ATS Review** - Resume analysis
-- **Interview Prep** - Question generation
-- **Job Search** - Job listings
-
-### ATS Resume Review
-1. Upload PDF resume
-2. Add job details (optional)
-3. Get AI-powered feedback
-4. View detailed scores and tips
-
-### Interview Question Generator
-1. Enter job title
-2. Select experience level
-3. Add job description (optional)
-4. Generate 10 tailored questions
-5. Regenerate for more questions
-
-### Job Search
-1. Enter job title
-2. Add location (optional)
-3. Browse real-time listings
-4. Apply directly via provided links
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
+> Note: this project stores auth users in a JSON file for demo purposes. On Vercel, that file is written under `/tmp`, so accounts are ephemeral and can reset between cold starts/deployments.

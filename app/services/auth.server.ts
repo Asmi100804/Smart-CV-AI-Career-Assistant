@@ -5,7 +5,9 @@ import { promisify } from "node:util";
 import { commitSession, destroySession, getSession } from "./session.server";
 
 const scrypt = promisify(scryptCallback);
-const USERS_FILE = resolve(process.cwd(), ".data", "users.json");
+const USERS_FILE = process.env.VERCEL
+  ? resolve("/tmp", "smartcv", "users.json")
+  : resolve(process.cwd(), ".data", "users.json");
 
 type StoredUser = {
   email: string;
