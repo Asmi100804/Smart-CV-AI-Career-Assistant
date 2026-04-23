@@ -1,8 +1,61 @@
-.DS_Store
-/node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# React Router
-/.react-router/
-/build/
+# Dependency directories
+node_modules/
+
+# Build output
+build/
+dist/
+.cache/
+
+# Vite files
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment files
 .env
-.env.local
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# React Router generated files
+.react-router/
+.route-types/
+
+# Coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Supabase local files
+.supabase/
+
+# Misc
+*.bak
+*.pid
+*.seed
+
+# Optional package manager lockfiles (remove if you use one)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+.data
