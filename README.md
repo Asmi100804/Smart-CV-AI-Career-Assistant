@@ -40,6 +40,26 @@ SMART-CV is a full-stack AI career assistance platform that helps users optimize
 - Job Search Portal
 - Authentication & User Management
 
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard](public/dashboard1.png)
+
+### Resume Analysis Result
+![Resume Analysis](public/analysis%201.png)
+
+### Career Roadmap
+![Career Roadmap](public/roadmap%202.png)
+
+### AI Interview Preparation
+![Interview Preparation](public/q%20and%20a.jpg)
+
+### Mock Test Evaluation
+![Mock Test](public/test%20result.png)
+
+### Job Search Result
+![Job Search](public/job%20result.jpg)
+
 ## 📊 Results
 
 - ⭐ 92.75% overall user satisfaction
