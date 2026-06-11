@@ -1,7 +1,8 @@
-import { Form, redirect, useActionData, useLoaderData, useNavigation } from "react-router";
-import { useEffect, useState } from "react";
+import { Form, redirect, useActionData, useLoaderData, useNavigation, useSubmit } from "react-router";
+import { useEffect, useState, type FormEvent } from "react";
 import type { Route } from "./+types/auth";
-import { createUserSession, getUserEmail, login, signUp } from "~/services/auth.server";
+import { createUserSession, getUserEmail } from "~/services/auth.server";
+import { loginWithLocalStorage, signUpWithLocalStorage } from "~/lib/local-auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userEmail = await getUserEmail(request);
@@ -19,39 +20,26 @@ export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const mode = formData.get("mode");
   const email = String(formData.get("email") || "").trim();
-  const password = String(formData.get("password") || "");
   const redirectTo = String(formData.get("redirectTo") || "/");
 
   if (email.length < 3 || !email.includes("@")) {
     return { error: "Please provide a valid email address.", mode };
   }
 
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters.", mode };
+  if (mode !== "session") {
+    return { error: "Please use the browser form to sign up or log in.", mode: "login" };
   }
 
-  if (mode === "signup") {
-    const result = await signUp(email, password);
-    if ("error" in result) {
-      return { error: result.error, mode };
-    }
-
-    return createUserSession(request, result.userEmail, redirectTo);
-  }
-
-  const result = await login(email, password);
-  if ("error" in result) {
-    return { error: result.error, mode: "login" };
-  }
-
-  return createUserSession(request, result.userEmail, redirectTo);
+  return createUserSession(request, email, redirectTo);
 }
 
 export default function Auth() {
   const { redirectTo } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
+  const submit = useSubmit();
   const [mode, setMode] = useState<"login" | "signup">((actionData?.mode as "login" | "signup") ?? "login");
+  const [localError, setLocalError] = useState<string | null>(null);
   const isSubmitting = navigation.state === "submitting";
 
   useEffect(() => {
@@ -60,15 +48,58 @@ export default function Auth() {
     }
   }, [actionData?.mode]);
 
+  const handleModeChange = (nextMode: "login" | "signup") => {
+    setMode(nextMode);
+    setLocalError(null);
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLocalError(null);
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+
+    if (email.length < 3 || !email.includes("@")) {
+      setLocalError("Please provide a valid email address.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setLocalError("Password must be at least 8 characters.");
+      return;
+    }
+
+    try {
+      const result = mode === "signup"
+        ? await signUpWithLocalStorage(email, password)
+        : await loginWithLocalStorage(email, password);
+
+      if ("error" in result) {
+        setLocalError(result.error);
+        return;
+      }
+
+      const sessionData = new FormData();
+      sessionData.set("mode", "session");
+      sessionData.set("email", result.userEmail);
+      sessionData.set("redirectTo", redirectTo);
+      submit(sessionData, { method: "post" });
+    } catch (error) {
+      setLocalError(error instanceof Error ? error.message : "Authentication failed. Please try again.");
+    }
+  };
+
   return (
     <main className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-4xl text-center mb-2">Welcome to SmartCV</h1>
         <p className="text-gray-600 text-center mb-8">Sign up or log in to continue.</p>
 
-        {actionData?.error && (
+        {(localError || actionData?.error) && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl mb-4">
-            {actionData.error}
+            {localError || actionData?.error}
           </div>
         )}
 
@@ -78,7 +109,7 @@ export default function Auth() {
               mode === "login" ? "bg-white shadow-sm text-gray-900" : "text-gray-600"
             }`}
             type="button"
-            onClick={() => setMode("login")}
+            onClick={() => handleModeChange("login")}
           >
             Log in
           </button>
@@ -87,13 +118,13 @@ export default function Auth() {
               mode === "signup" ? "bg-white shadow-sm text-gray-900" : "text-gray-600"
             }`}
             type="button"
-            onClick={() => setMode("signup")}
+            onClick={() => handleModeChange("signup")}
           >
             Sign up
           </button>
         </div>
 
-        <Form method="post" className="gap-4">
+        <Form method="post" className="gap-4" onSubmit={handleSubmit}>
           <input type="hidden" name="mode" value={mode} />
           <input type="hidden" name="redirectTo" value={redirectTo} />
 
