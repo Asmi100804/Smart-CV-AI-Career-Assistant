@@ -59,3 +59,5 @@ temp/
 # yarn.lock
 # pnpm-lock.yaml
 .data
+.data/
+.data/users.json
